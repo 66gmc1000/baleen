@@ -1,0 +1,86 @@
+---
+
+- name: pull nginx docker image - webserver
+  docker_image:
+    name: nginx
+
+- name: make directories for persistant www storage
+  file:
+    path: /root/nginx
+    state: directory
+
+- name: run webserver container
+  docker_container:
+    name: nginx
+    image: nginx:latest
+    state: started
+    restart_policy: always
+    volumes:
+      - /root/nginx/html:/usr/share/nginx/html
+    ports:
+      - 8080:80
+
+- name: Copy test document
+  copy:
+    src: index.html
+    dest: /root/nginx/html/index.html
+
+# - name: open ports in firewalld - https
+#   firewalld:
+#     service: https
+#     permanent: yes
+#     state: enabled
+
+# - name: open ports in firewalld - http
+#   firewalld:
+#     service: http
+#     permanent: yes
+#     state: enabled
+
+- name: pull smbd docker image - fileserver
+  docker_image:
+    name: dperson/samba
+
+- name: make directories for persistant smb storage
+  file:
+    path: /root/smb
+    state: directory
+
+- name: make directories for persistant smb storage - public
+  file:
+    path: /root/smb/public
+    state: directory
+
+- name: make directories for persistant smb storage - example1
+  file:
+    path: /root/smb/example1
+    state: directory
+
+- name: make directories for persistant smb storage - example2
+  file:
+    path: /root/smb/example2
+    state: directory
+
+- name: run smbd container
+  docker_container:
+    name: smbd
+    image: dperson/samba:latest
+    state: started
+    restart_policy: always
+    volumes:
+      - /root/smb/share:/mount
+    ports:
+      - 445:445
+      - 139:139
+    env:
+      TZ: "America/Vancouver"
+      USERID: "1000"
+      GROUPID: "1000"
+      
+- name: configure smbd shares
+  command: docker exec -it smbd samba.sh -u "example1;badpass" -u "example2;badpass" -s "public;/mount/public" -s "example1 private share;/mount/example1;no;no;no;example1" -s "example2 private share;/mount/example2;no;no;no;example2"
+
+- name: Copy test document
+  copy:
+    src: index.html
+    dest: /root/smb/share/index.html
