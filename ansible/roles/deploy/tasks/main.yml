@@ -1,8 +1,71 @@
 ---
 
-- name: pull nginx docker image - webserver
+- name: Remove registry, if it exists
+  docker_container:
+    name: "{{ registry_name }}"
+    state: absent
+
+- name: Copy template
+  template: src=request.conf.j2 dest="{{ registry_cert_path }}/request.conf"
+  when: registry_create_certs
+
+- name: Create key
+  command: openssl genrsa -out "{{ registry_cert_path }}/{{ registry_key_file }}" 4096 
+  when: registry_create_certs
+
+- name: Create certificate signing request
+  command: >
+     openssl req 
+     -new 
+     -out "{{ registry_cert_path }}/request.csr"
+     -key "{{ registry_cert_path }}/{{ registry_key_file }}"
+     -config request.conf
+  args:
+    chdir: "{{ registry_cert_path }}" 
+  when: registry_create_certs
+
+- name: Sign the request
+  command: >
+     openssl x509
+     -req
+     -days 3650
+     -in "{{ registry_cert_path }}/request.csr"
+     -signkey "{{ registry_cert_path }}/{{ registry_key_file }}" 
+     -out "{{ registry_cert_path }}/{{ registry_cert_file }}"
+     -extensions v3_req 
+     -extfile request.conf    
+  args:
+    chdir: "{{ registry_cert_path }}" 
+  when: registry_create_certs
+
+- include: encrypt.yml
+  with_items: "{{ registry_users }}" 
+  
+- name: Recreate secure docker registry
+  docker_container:
+    name: "{{ registry_name }}" 
+    image: registry:2
+    volumes:
+      - "{{ registry_host_cert_path }}:/certs"
+      - "{{ registry_host_auth_path }}:/auth"
+    env:
+      REGISTRY_HTTP_TLS_CERTIFICATE: "/certs/{{ registry_cert_file }}"
+      REGISTRY_HTTP_TLS_KEY: "/certs/{{ registry_key_file }}"
+      REGISTRY_AUTH: htpasswd
+      REGISTRY_AUTH_HTPASSWD_REALM: "Registry Realm"
+      REGISTRY_AUTH_HTPASSWD_PATH: "/auth/{{ registry_auth_file }}"
+    ports:
+      - "{{ registry_host_port }}:{{ registry_container_port }}"
+  register: output
+
+
+
+
+
+
+- name: pull docker registry image
   docker_image:
-    name: nginx
+    name: registry
 
 - name: make directories for persistant www storage
   file:

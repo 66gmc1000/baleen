@@ -16,7 +16,7 @@ resource "vultr_startup_script" "deb-python-install" {
 resource "vultr_server" "my_server" {
   plan_id = "${var.one_cpu_one_gb_ram}"
   region_id = "${var.vultr_seattle}"
-  os_id = "${var.ubuntu_os}"
+  os_id = 270
   label = "${var.host_name}"
   enable_ipv6 = true
   auto_backup = true
@@ -24,7 +24,6 @@ resource "vultr_server" "my_server" {
   notify_activate = false
   ddos_protection = true
   tag = "tag"
-  script_id = "${vultr_startup_script.deb-python-install.id}"
   ssh_key_ids = ["${vultr_ssh_key.ansible-key.id}"]
   firewall_group_id = "${vultr_firewall_group.fwg.id}"
 }

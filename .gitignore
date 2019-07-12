@@ -7,3 +7,4 @@ ansible-key.pub
 terraform.tfstate
 terraform.tfstate.backup
 temp
+.cloudflare

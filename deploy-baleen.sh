@@ -20,12 +20,12 @@ if [[ -z "$(type terraform)" ]]; then
   sudo apt-get install unzip
   mkdir temp
   cd temp
-  wget https://releases.hashicorp.com/terraform/0.12.2/terraform_0.12.2_linux_amd64.zip
-  unzip terraform_0.12.2_linux_amd64.zip
+  wget https://releases.hashicorp.com/terraform/0.12.4/terraform_0.12.4_linux_amd64.zip
+  unzip terraform_0.12.4_linux_amd64.zip
   sudo mv terraform /usr/local/bin/
   cd ..
   rm -rf temp
-  terraform
+  terraform version
 fi
 
 # check if ansible is installed or not

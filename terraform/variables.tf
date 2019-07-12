@@ -2,20 +2,10 @@ variable "vultr_seattle" {
   description = "Vultr Seattle Region"
   default = "4"
 }
-
-# variable "vultr_seattle" {
-#   description = "Vultr Seattle Region"
-#   default = "6"
-# }
-
 variable "ubuntu_os" {
-  description = "Docker on CentOS 7"
-  default = 215
+  description = "Ubuntu 18.04 x64"
 }
-# variable "one_cpu_one_gb_ram" {
-#   description = "1024 MB RAM,25 GB SSD,1.00 TB BW"
-#   default = 200
-# }
+
 variable "one_cpu_one_gb_ram" {
   description = "1024 MB RAM,25 GB SSD,1.00 TB BW"
   default = 201

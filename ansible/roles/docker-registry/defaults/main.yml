@@ -1,0 +1,29 @@
+---
+registry_name: registry
+registry_auth_path: "{{ role_path }}/files/auth"
+registry_auth_file: htpasswd 
+registry_cert_path: "{{ role_path }}/files/certs"
+registry_cert_file: domain.crt
+registry_key_file: domain.key
+registry_host_cert_path: "{{ registry_cert_path }}"
+registry_host_auth_path: "{{ registry_auth_path }}"
+registry_host_port: 5000
+registry_container_port: 5000
+
+registry_users:
+  - username: testuser 
+    password: testpassword
+  - username: testuser2
+    password: testpassword2
+
+registry_create_certs: yes
+registry_country: US  
+registry_province: NC
+registry_locality: Durham
+registry_organization: Acme, Inc.
+registry_organizational_unit: Widgets
+registry_common_name: localhost 
+
+registry_altnames:
+  - type: IP.1
+name: 127.0.0.1 
