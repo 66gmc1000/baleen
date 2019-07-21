@@ -5,13 +5,15 @@
     name: "{{ registry_name }}"
     state: absent
 
-- name: Copy template
-  template: src=request.conf.j2 dest="{{ registry_cert_path }}/request.conf"
-  when: registry_create_certs
+# - name: Copy template
+#   template:
+#     src: request.conf.j2
+#     dest: "{{ registry_cert_path }}/request.conf"
+#   when: registry_create_certs == "true"
 
 - name: Create key
   command: openssl genrsa -out "{{ registry_cert_path }}/{{ registry_key_file }}" 4096 
-  when: registry_create_certs
+  when: registry_create_certs == "true" == "true"
 
 - name: Create certificate signing request
   command: >
@@ -22,7 +24,7 @@
      -config request.conf
   args:
     chdir: "{{ registry_cert_path }}" 
-  when: registry_create_certs
+  when: registry_create_certs == "true"
 
 - name: Sign the request
   command: >
@@ -36,10 +38,10 @@
      -extfile request.conf    
   args:
     chdir: "{{ registry_cert_path }}" 
-  when: registry_create_certs
+  when: registry_create_certs == "true"
 
-- include: encrypt.yml
-  with_items: "{{ registry_users }}" 
+# - include: encrypt.yml
+#   with_items: "{{ registry_users }}" 
   
 - name: Recreate secure docker registry
   docker_container:

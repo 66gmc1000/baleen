@@ -16,7 +16,7 @@ registry_users:
   - username: testuser2
     password: testpassword2
 
-registry_create_certs: yes
+registry_create_certs: false
 registry_country: US  
 registry_province: NC
 registry_locality: Durham

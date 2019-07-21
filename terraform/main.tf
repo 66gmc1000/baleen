@@ -37,29 +37,12 @@ resource "vultr_firewall_rule" "http" {
   protocol = "tcp"
   network = "0.0.0.0/0"
   //network = "${vultr_server.my_server.main_ip}/32"
-  from_port = "80"
+  from_port = "5000"
 }
-resource "vultr_firewall_rule" "https" {
-  firewall_group_id = "${vultr_firewall_group.fwg.id}"
-  protocol = "tcp"
-  network = "0.0.0.0/0"
-  from_port = "443"
-}
+
 resource "vultr_firewall_rule" "ssh" {
   firewall_group_id = "${vultr_firewall_group.fwg.id}"
   protocol = "tcp"
   network = "0.0.0.0/0"
   from_port = "22"
-}
-resource "vultr_firewall_rule" "smb" {
-  firewall_group_id = "${vultr_firewall_group.fwg.id}"
-  protocol = "tcp"
-  network = "0.0.0.0/0"
-  from_port = "445"
-}
-resource "vultr_firewall_rule" "smbd" {
-  firewall_group_id = "${vultr_firewall_group.fwg.id}"
-  protocol = "tcp"
-  network = "0.0.0.0/0"
-  from_port = "139"
 }

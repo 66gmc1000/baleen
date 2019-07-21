@@ -4,6 +4,7 @@ variable "vultr_seattle" {
 }
 variable "ubuntu_os" {
   description = "Ubuntu 18.04 x64"
+  default = "215"
 }
 
 variable "one_cpu_one_gb_ram" {

@@ -20,4 +20,4 @@
 - name: Add user to password file
   lineinfile:
     dest: "{{ registry_auth_path }}/{{ registry_auth_file }}"
-line: "{{ ansible_docker_container.Output | replace('\n', '') }}"
+    line: "{{ ansible_docker_container.Output | replace('\n', '') }}"
